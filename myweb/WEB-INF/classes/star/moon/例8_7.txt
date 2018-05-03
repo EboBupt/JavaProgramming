@@ -1,0 +1,81 @@
+web.xml文件需要添加如下内容：
+<servlet>
+    <servlet-name>guess</servlet-name>
+    <servlet-class>star.moon.HandleGuess</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>guess</servlet-name>
+    <url-pattern>/handleGuess</url-pattern>
+</servlet-mapping>
+
+【例8-7】
+JSP页面：
+getNumber.jsp（效果如图8.10所示）
+<%@ page contentType="text/html;charset=GB2312" %>
+<HTML>
+<BODY ><FONT size=4>
+<% session.setAttribute("message","请您猜数");
+   int randomNumber=(int)(Math.random()*100)+1;        //获取一个随机数
+   session.setAttribute("savedNumber",new Integer(randomNumber));
+%>
+<P>访问或刷新该页面可以随机得到一个1至100之间的数
+<BR>单击下面的超链接去猜出这个数:
+<BR><A href="inputNumber.jsp">去猜数</A>
+</BODY></HTML>
+
+
+inputNumber.jsp（效果如图8.11所示）
+<%@ page contentType="text/html;charset=GB2312" %>
+<HTML>
+<BODY ><FONT size=2>
+<%
+  String message=(String)session.getAttribute("message"); 	//获取会话中的信息
+%>
+<FORM action="handleGuess" method=post>
+   输入您的猜测（1至100之间的整数）:
+<BR><Input type=text name=clientGuessNumber size=8>
+  <%= message%>
+<BR><Input Type=submit value="提交">
+</FORM>
+  单击下面的按钮得到一个新的随机数:
+<FORM action="getNumber.jsp" method=post>
+  <Input type=submit value="得到一个新的随机数">
+</FORM>
+</BODY></HTML>
+
+
+Servlet源文件：
+HandleGuess.java
+package star.moon;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class HandleGuess extends HttpServlet {
+   public void init(ServletConfig config) throws ServletException{
+      super.init(config);
+   }
+   public void doPost(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+      HttpSession session=request.getSession(true);  //获取客户的会话对象
+      //获取客户猜测提交的数:
+      int guessNumber=Integer.parseInt(request.getParameter("clientGuessNumber"));
+      Integer integer=(Integer)session.getAttribute("savedNumber");//会话中存储的数
+      int realNumber=integer.intValue(); 
+      if(guessNumber<realNumber) {
+         session.setAttribute("message","您猜小了");
+         response.sendRedirect("inputNumber.jsp");          
+      }
+      if(guessNumber>realNumber) {
+         session.setAttribute("message","您猜大了");
+         response.sendRedirect("inputNumber.jsp");          
+      }
+      if(guessNumber==realNumber) {
+         session.setAttribute("message","您猜对了");
+         response.sendRedirect("inputNumber.jsp");          
+      }
+   } 
+   public void doGet(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {  
+      doPost(request,response);
+   }
+}

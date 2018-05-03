@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app>
+    <servlet>
+        <servlet-name>hello</servlet-name>
+        <servlet-class>star.moon.Hello</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hello</servlet-name>
+        <url-pattern>/lookHello</url-pattern>
+    </servlet-mapping>
+
+ <servlet>
+    <servlet-name>computer</servlet-name>
+    <servlet-class>star.moon.Computer</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>computer</servlet-name>
+    <url-pattern>/getResult</url-pattern>
+</servlet-mapping>
+
+
+
+</web-app>
+

@@ -1,0 +1,106 @@
+web.xml文件需要添加如下内容：
+<servlet>
+    <servlet-name>computer1</servlet-name>
+    <servlet-class>star.moon.GetSquare</servlet-class>
+</servlet>
+<servlet>
+    <servlet-name>computer2</servlet-name>
+    <servlet-class>star.moon.GetSquareOrCubic</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>computer1</servlet-name>
+    <url-pattern>/showSquare</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+    <servlet-name>computer2</servlet-name>
+    <url-pattern>/showSquareOrCubic</url-pattern>
+</servlet-mapping>
+
+【例8-4】
+JSP页面：
+method.jsp
+<%@ page contentType="text/html;charset=GB2312" %>
+<HTML><BODY ><FONT size=2>
+<P>输入一个数，提交给servlet(Post方式)：
+<FORM action="showSquare" method=post>
+  <Input type=text name=number>
+  <Input type=submit value="提交">
+</FORM>
+<P>输入一个数，提交给servlet(Get方式)：
+<FORM action="showSquareOrCubic" method=get>
+  <Input type=text name=number>
+  <Input type=submit value="提交">
+</FORM>
+<P>输入一个数，提交给servlet(Post方式)：
+<FORM action="showSquareOrCubic" method=get>
+  <Input type=text name=number>
+  <Input type=submit value="提交">
+</FORM>
+</BODY></HTML>
+Servlet源文件：
+GetSqare.java
+package star.moon;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class GetSquare extends HttpServlet{
+   public void init(ServletConfig config) throws ServletException{
+      super.init(config);
+   }
+   public void doPost(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {  
+      response.setContentType("text/html;charset=GB2312");
+      PrintWriter out=response.getWriter();
+      out.println("<html><body>");
+      String number=request.getParameter("number");     //获取客户提交的信息
+      double n=0;
+      try{  n=Double.parseDouble(number);
+           out.print("<BR>"+number+"的平方是：");
+           out.print("<BR>"+n*n);
+      }
+      catch(NumberFormatException e) { out.print("<H1>请输入数字字符! </H1>"); } 
+      out.println("</body></html>");
+   }
+   public void doGet(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+       doPost(request,response);
+   }
+}
+GetSquareOrCubic.java
+package star.moon;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class GetSquareOrCubic extends HttpServlet {
+   public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+   }
+   public void doPost(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+      response.setContentType("text/html;charset=GB2312");
+      PrintWriter out=response.getWriter();
+      out.println("<html><body>");
+      String number=request.getParameter("number");     //获取客户提交的信息
+      double n=0;
+      try{  n=Double.parseDouble(number);
+           out.print("<BR>"+number+"的平方是：");
+           out.print("<BR>"+n*n);
+      }
+      catch(NumberFormatException e) { out.print("<H1>请输入数字字符! </H1>"); }       
+      out.println("</body></html>");
+   } 
+   public void doGet(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+      response.setContentType("text/html;charset=GB2312");
+      PrintWriter out=response.getWriter();
+      out.println("<html><body>");
+      String number=request.getParameter("number");     //获取客户提交的信息
+      double n=0;
+      try{  n=Double.parseDouble(number);
+           out.print("<BR>"+number+"的立方是：");
+           out.print("<BR>"+n*n*n);
+      }
+      catch(NumberFormatException e) { out.print("<H1>请输入数字字符! </H1>"); }       
+      out.println("</body></html>");
+   }
+}

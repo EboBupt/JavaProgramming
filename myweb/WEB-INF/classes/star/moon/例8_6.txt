@@ -1,0 +1,75 @@
+web.xml文件需要添加如下内容：
+<servlet>
+    <servlet-name>boy</servlet-name>
+    <servlet-class>star.moon.Boy</servlet-class>
+</servlet>
+<servlet>
+    <servlet-name>look</servlet-name>
+    <servlet-class>star.moon.Look</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>boy</servlet-name>
+    <url-pattern>/lookBoy</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+    <servlet-name>look</servlet-name>
+    <url-pattern>/lookMySession</url-pattern>
+</servlet-mapping>
+
+
+【例8-6】
+Servlet源文件：
+Boy.java（效果如图8.8所示）
+package star.moon;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class Boy extends HttpServlet {
+   public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+   }
+   public void doPost(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {  
+      response.setContentType("text/html;charset=GB2312");
+      PrintWriter out=response.getWriter();
+      out.print("<html><body>");
+      HttpSession session=request.getSession(true);  //获取客户的会话对象
+      session.setAttribute("name","耿祥义");
+      out.println("您的会话的id："); 
+      out.println("<BR>"+session.getId());
+      out.println("<BR>单击超链接请求另一个Servlet：");
+      out.println("<A href=lookMySession>请求另一个Servlet</A>");  
+      out.print("</body></html>");
+   } 
+   public void doGet(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+      doPost(request,response);
+   }
+}
+Look.java（效果如图8.9所示）
+package star.moon;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class Look extends HttpServlet {
+   public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+   }
+   public void doPost(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+      response.setContentType("text/html;charset=GB2312");
+      PrintWriter out=response.getWriter();
+      out.print("<html><body>");
+      HttpSession session=request.getSession(true);    	//获取客户的会话对象
+      String str=(String)session.getAttribute("name"); 		//获取会话中存储的数据
+      out.println("您的会话的id："); 
+      out.println("<BR>"+session.getId()); 
+      out.println("<BR>您的会话中的数据："); 
+      out.println("<BR>"+str); 
+      out.print("</body></html>");
+   } 
+   public void doGet(HttpServletRequest request,HttpServletResponse response) 
+                        throws ServletException,IOException {   
+      doPost(request,response);
+   }
+}
